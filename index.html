@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页</title>
+    <!-- 引入 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <!-- 添加 Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 将 CSS 直接嵌入，这样可以立即看到效果 */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --text-color: #333;
+            --bg-color: #fff;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 56px;
+        }
+
+        .navbar {
+            background-color: var(--bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-section {
+            padding: 120px 0 60px;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+
+        .profile-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 160px;
+            height: 220px;
+            margin: 0 auto;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 80px / 110px;
+            border: 5px solid white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .lang-toggle {
+            position: absolute;
+            right: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            color: var(--primary-color);
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* 添加时间轴样式 */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--secondary-color);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 33.33%;
+            float: left;
+            padding: 0 20px;
+        }
+
+        .timeline-content {
+            position: relative;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .time-badge {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .timeline-content h3 {
+            margin: 20px 0 10px;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+
+        .timeline-content p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 50%;
+                width: 2px;
+                height: 100%;
+                top: 0;
+            }
+
+            .timeline-item {
+                width: 100%;
+                float: none;
+                margin-bottom: 60px;
+            }
+
+            .timeline-content {
+                margin-left: 50px;
+            }
+
+            .time-badge {
+                left: 0;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* 修复 Bilibili 图标样式 */
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .fa-bilibili {
+            width: 28px;
+            height: 28px;
+        }
+
+        .fa-bilibili::before {
+            content: "";
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        /* 添加新的布局样式 */
+        .profile-split {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .profile-left, .profile-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 更新头像样式 */
+        .profile-container {
+            width: 300px; /* 放大头像容器 */
+            height: 400px; /* 保持比例 */
+            margin: 0 auto;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 150px / 200px; /* 调整椭圆形状 */
+            border: 5px solid white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* 添加分隔线样式 */
+        .profile-divider {
+            width: 2px;
+            height: 300px; /* 调整分隔线高度 */
+            background: linear-gradient(to bottom, transparent, var(--secondary-color), transparent);
+            margin: 0 20px;
+        }
+
+        /* 右侧内容样式 */
+        .profile-right {
+            padding-left: 20px;
+        }
+
+        .introduction {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .introduction h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .introduction p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        /* 语言切换按钮样式 */
+        .lang-toggle {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            margin-top: 20px;
+            align-self: flex-end;
+        }
+
+        .lang-toggle:hover {
+            background-color: #2980b9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .profile-split {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .profile-divider {
+                width: 80%;
+                height: 2px;
+                margin: 20px auto;
+            }
+
+            .profile-container {
+                width: 220px;
+                height: 300px;
+            }
+
+            .profile-right {
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .introduction {
+                text-align: center;
+            }
+        }
+
+        /* 名字和语言切换按钮容器样式 */
+        .name-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;  /* 名字和按钮之间的间距 */
+            margin-bottom: 20px;
+        }
+
+        .name-container h1 {
+            margin: 0;  /* 移除标题默认边距 */
+        }
+
+        /* 更新语言切换按钮样式 */
+        .lang-toggle {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+            height: fit-content;
+        }
+
+        .lang-toggle:hover {
+            background-color: #2980b9;
+        }
+
+        /* 减少教育经历和下面栏目的间距 */
+        .timeline {
+            margin-bottom: 10px; /* 减少底部间距 */
+        }
+
+        .section {
+            padding-top: 10px; /* 减少顶部填充 */
+            padding-bottom: 10px; /* 减少底部填充 */
+        }
+
+        .profile-section {
+            text-align: center;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .profile-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            right: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            z-index: 100;
+        }
+
+        .lang-toggle:hover {
+            background-color: #2980b9;
+        }
+
+        /* 在已有的 style 标签中添加这些样式 */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: var(--secondary-color);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: flex;
+        }
+
+        .timeline-container.left {
+            left: 0;
+            justify-content: flex-end;
+        }
+
+        .timeline-container.right {
+            left: 50%;
+            justify-content: flex-start;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+            width: 80%;
+            max-width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .left .timeline-content::after {
+            right: -50px;
+        }
+
+        .right .timeline-content::after {
+            left: -50px;
+        }
+
+        .date {
+            background: var(--secondary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content h3 {
+            margin: 10px 0;
+            color: var(--primary-color);
+        }
+
+        .timeline-content p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* 响应式设计 */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+                width: 4px;
+                height: 100%;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+                justify-content: flex-start;
+            }
+            
+            .timeline-container.right {
+                left: 0;
+            }
+            
+            .timeline-content {
+                width: 100%;
+            }
+            
+            .timeline-content::after {
+                left: -45px !important;
+            }
+        }
+
+        .research-interests {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 60px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand translate" data-en="Personal Website" data-zh="个人网站" href="#">Personal Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link translate" data-en="About" data-zh="关于我" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link translate" data-en="Academic Background" data-zh="学术背景" href="#background">Academic Background</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link translate" data-en="Portfolio" data-zh="作品展示" href="#works">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link translate" data-en="Contact" data-zh="联系方式" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 个人介绍区域 -->
+    <header id="about" class="hero-section">
+        <div class="container">
+            <div class="profile-split">
+                <!-- 左侧头像部分 -->
+                <div class="profile-left">
+                    <div class="profile-container">
+                        <img src="images/20241202-191207.jpg" 
+                             alt="个人照片" 
+                             class="profile-image">
+                    </div>
+                </div>
+
+                <!-- 分隔线 -->
+                <div class="profile-divider"></div>
+
+                <!-- 右侧信息部分 -->
+                <div class="profile-right">
+                    <div class="introduction">
+                        <!-- 名字和按钮的容器 -->
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <h1 class="translate" data-en="Qiyun Huo" data-zh="霍启云">Qiyun Huo</h1>
+                            <button id="langToggle" style="background-color: #3498db; color: white; border: none; border-radius: 20px; padding: 6px 12px; cursor: pointer;">
+                                <span class="lang-text">EN</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 中文介绍 -->
+                        <p class="translate" data-lang="zh" style="line-height: 1.8; margin-top: 20px; font-size: 1.1em; display: none;">
+                            我是一名来自武汉大学
+                            <a href="http://www.lmars.whu.edu.cn/" target="_blank" style="color: #3498db; text-decoration: underline;">测绘遥感信息工程国家重点实验室(LIESMARS)</a>
+                            <a href="https://github.com/WHU-USI3DV" target="_blank" style="color: #3498db; text-decoration: underline;">空间智能研究所</a>
+                            的硕士一年级研究生，导师是
+                            <a href="https://dongzhenwhu.github.io/index.html" target="_blank" style="color: #3498db; text-decoration: underline;">董震教授</a>
+                            和
+                            <a href="https://3s.whu.edu.cn/ybs/index.htm" target="_blank" style="color: #3498db; text-decoration: underline;">杨必胜教授</a>
+                            。
+                            <br><br>
+                            目前的研究方向为：场景理解，自监督学习与域自适应。
+                            <br><br>
+                            业余时间使用C++开发程序（很多内存泄漏）。
+                        </p>
+
+                        <!-- 英文介绍 -->
+                        <p class="translate" data-lang="en" style="line-height: 1.8; margin-top: 20px; font-size: 1.1em;">
+                            I am a first-year master student at the 
+                            <a href="https://github.com/WHU-USI3DV" target="_blank" style="color: #3498db; text-decoration: underline;">WHU-USI3DV</a>, 
+                            <a href="http://www.lmars.whu.edu.cn/" target="_blank" style="color: #3498db; text-decoration: underline;">State Key Laboratory of Information Engineering in Surveying Mapping and Remote Sensing (LIESMARS)</a>, 
+                            Wuhan University. I am fortunate to be supervised by 
+                            <a href="https://dongzhenwhu.github.io/index.html" target="_blank" style="color: #3498db; text-decoration: underline;">Prof. Zhen Dong</a> 
+                            and 
+                            <a href="https://3s.whu.edu.cn/ybs/index.htm" target="_blank" style="color: #3498db; text-decoration: underline;">Prof. Bishing Yang</a>. 
+                            <br><br>
+                            My current research interests focus on Scene Understanding, Self-Supervised Learning, and Domain Adaptation.
+                            <br><br>
+                            In my spare time, I develop programs using C++ (with many memory leaks).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 学术背景 -->
+    <section id="background" class="section">
+        <div class="container">
+            <h2 class="text-center mb-5 translate" data-en="Education" data-zh="教育经历">Academic Background</h2>
+            
+            <div class="timeline">
+                <div class="timeline-container left">
+                    <div class="timeline-content">
+                        <div class="date translate" data-en="2020 - 2024" data-zh="2020-2024">2015-2019</div>
+                        <h3 class="translate" data-en="Bachelor's Degree" data-zh="学士学位">Bachelor's Degree</h3>
+                        <p class="translate" 
+                           data-en="Chengdu University of Technology, College of Earth and Planetary Sciences, Surveying and Mapping Engineering" 
+                           data-zh="成都理工大学 地球与行星科学学院，测绘工程">
+                           <img src="images/cdut.png" alt="University Logo" style="width: 30px; vertical-align: middle; margin-right: 10px;">
+                           Chengdu University of Technology, College of Earth and Planetary Sciences, Surveying and Mapping Engineering
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <div class="date translate" data-en="2024 - now" data-zh="2024 - 至今">2019-2021</div>
+                        <h3 class="translate" data-en="Master's student" data-zh="硕士研究生">Master's Degree</h3>
+                        <p class="translate" 
+                           data-en="State Key Laboratory of Information Engineering in Surveying, Mapping and Remote Sensing, Wuhan University, Resources and Environment" 
+                           data-zh="武汉大学 测绘遥感信息工程国家重点实验室，资源与环境">
+                           <img src="university_logo.png" alt="University Logo" style="width: 30px; vertical-align: middle; margin-right: 10px;">
+                           XXX University, Remote Sensing and Surveying Engineering
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="research-interests mt-5">
+                <h3 class="text-center mb-4 translate" data-en="Research Interests" data-zh="研究方向">Research Interests</h3>
+                <p class="text-center translate" 
+                   data-en="Main research areas include UAV mapping, LiDAR data processing, and GIS applications in environmental monitoring." 
+                   data-zh="主要研究方向包括无人机测绘、激光雷达数据处理，以及地理信息系统在环境监测中的应用。">
+                   Main research areas include UAV mapping, LiDAR data processing, and GIS applications in environmental monitoring.
+                </p>
+            </div>
+
+            <!-- 研究方向下方的图片 -->
+            <div class="research-images" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <img src="images/20241201-171714.jpg" alt="Image 1" style="width: 32%; border-radius: 8px;">
+                <img src="images/20241201-171714.jpg" alt="Image 2" style="width: 32%; border-radius: 8px;">
+                <img src="images/20241201-171734.jpg" alt="Image 3" style="width: 32%; border-radius: 8px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品展示 -->
+    <section id="works" class="section bg-light">
+        <div class="container"style="max-width: 1000px; margin: 0 auto;">
+            <h2 class="section-title text-center mb-5 translate" data-en="Portfolio" data-zh="作品展示">Portfolio</h2>
+            <div id="portfolioCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="images/20241201-171734.jpg" class="d-block w-100" alt="Project 1">
+                        <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 8px;">
+                            <h5>Project One</h5>
+                            <p>This is a React-based web application project.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/20241201-171734.jpg" class="d-block w-100" alt="Project 2">
+                        <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 8px;">
+                            <h5>Project Two</h5>
+                            <p>A Python-based machine learning project.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="images/20241201-171734.jpg" class="d-block w-100" alt="Project 3">
+                        <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 8px;">
+                            <h5>Project Three</h5>
+                            <p>Mobile application development project.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <footer id="contact">
+        <div class="container">
+            <h2 class="mb-4 translate" data-en="Contact" data-zh="联系方式">Contact</h2>
+            <div class="social-links">
+                <a href="https://github.com/idelise" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://space.bilibili.com/197572635?spm_id_from=333.1007.0.0" title="Bilibili"><i class="fa fa-bilibili"></i></a>
+                <a href="mailto:example@email.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p class="mt-4">
+                <span class="translate" data-en="Email: hqy123@whu.edu.cn" data-zh="邮箱：hqy123@whu.edu.cn">Email: </span>
+            </p>
+            <p class="copyright">© 2024 
+                <span class="translate" data-en="All Rights Reserved" data-zh="版权所有">All Rights Reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const langToggle = document.getElementById('langToggle');
+        const langText = langToggle.querySelector('.lang-text');
+        let isEnglish = true;
+
+        function updateContent(isEnglish) {
+            document.querySelectorAll('.translate').forEach(element => {
+                if (element.dataset.lang) {
+                    element.style.display = (isEnglish && element.dataset.lang === 'en') || (!isEnglish && element.dataset.lang === 'zh') ? 'block' : 'none';
+                } else if (element.dataset.en && element.dataset.zh) {
+                    element.textContent = isEnglish ? element.dataset.en : element.dataset.zh;
+                }
+            });
+        }
+
+        // 初始化页面内容为英文
+        updateContent(true);
+
+        // 添加点击事件监听器
+        langToggle.addEventListener('click', function() {
+            isEnglish = !isEnglish;
+            langText.textContent = isEnglish ? 'EN' : 'ZH';
+            updateContent(isEnglish);
+        });
+    });
+    </script>
+</body>
+</html> 
