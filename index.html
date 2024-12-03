@@ -140,6 +140,40 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-align: center;
             z-index: 2;
+            overflow: hidden;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .timeline-content.cdut::before {
+            background-image: url('images/cdut1.png');
+            width: 206px;
+            height: 188px;
+            top: -36px;
+            left: -21px;
+            opacity: 0.8;
+
+        }
+
+        .timeline-content.whu::before {
+            background-image: url('images/whu1.png');
+            width: 269px;
+            height: 75px;
+            top: 13px;
+            left: -55px;
+            opacity: 0.8;
         }
 
         .time-badge {
@@ -360,163 +394,6 @@
             padding-top: 10px; /* 减少顶部填充 */
             padding-bottom: 10px; /* 减少底部填充 */
         }
-
-        .profile-section {
-            text-align: center;
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .profile-container {
-            display: inline-block;
-            position: relative;
-        }
-
-        .lang-toggle {
-            position: absolute;
-            right: -70px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 16px;
-            z-index: 100;
-        }
-
-        .lang-toggle:hover {
-            background-color: #2980b9;
-        }
-
-        /* 在已有的 style 标签中添加这些样式 */
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 0;
-        }
-
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background: var(--secondary-color);
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-
-        .timeline-container {
-            padding: 10px 40px;
-            position: relative;
-            width: 50%;
-            display: flex;
-        }
-
-        .timeline-container.left {
-            left: 0;
-            justify-content: flex-end;
-        }
-
-        .timeline-container.right {
-            left: 50%;
-            justify-content: flex-start;
-        }
-
-        .timeline-content {
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 2;
-            width: 80%;
-            max-width: 400px;
-            transition: transform 0.3s ease;
-        }
-
-        .timeline-content:hover {
-            transform: translateY(-5px);
-        }
-
-        .timeline-content::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: var(--secondary-color);
-            border-radius: 50%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .left .timeline-content::after {
-            right: -50px;
-        }
-
-        .right .timeline-content::after {
-            left: -50px;
-        }
-
-        .date {
-            background: var(--secondary-color);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        .timeline-content h3 {
-            margin: 10px 0;
-            color: var(--primary-color);
-        }
-
-        .timeline-content p {
-            margin: 0;
-            color: #666;
-        }
-
-        /* 响应式设计 */
-        @media screen and (max-width: 768px) {
-            .timeline::after {
-                left: 31px;
-                width: 4px;
-                height: 100%;
-            }
-            
-            .timeline-container {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-                justify-content: flex-start;
-            }
-            
-            .timeline-container.right {
-                left: 0;
-            }
-            
-            .timeline-content {
-                width: 100%;
-            }
-            
-            .timeline-content::after {
-                left: -45px !important;
-            }
-        }
-
-        .research-interests {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 60px !important;
-        }
     </style>
 </head>
 <body>
@@ -616,7 +493,7 @@
             
             <div class="timeline">
                 <div class="timeline-container left">
-                    <div class="timeline-content">
+                    <div class="timeline-content cdut">
                         <div class="date translate" data-en="2020 - 2024" data-zh="2020-2024">2015-2019</div>
                         <h3 class="translate" data-en="Bachelor's Degree" data-zh="学士学位">Bachelor's Degree</h3>
                         <p class="translate" 
@@ -629,7 +506,7 @@
                 </div>
 
                 <div class="timeline-container right">
-                    <div class="timeline-content">
+                    <div class="timeline-content whu">
                         <div class="date translate" data-en="2024 - now" data-zh="2024 - 至今">2019-2021</div>
                         <h3 class="translate" data-en="Master's student" data-zh="硕士研究生">Master's Degree</h3>
                         <p class="translate" 
